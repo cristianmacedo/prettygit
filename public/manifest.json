@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "js": ["./prettypr.js"],
+      "js": ["prettypr.js"],
       "matches": ["https://github.com/*/*/pull/*"]
     }
   ]
