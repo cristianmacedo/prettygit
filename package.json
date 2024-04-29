@@ -1,0 +1,24 @@
+{
+  "name": "prettygit",
+  "version": "1.0.0",
+  "description": "Copy and paste git issues in a pretty format",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cristianmacedo/prettygit.git"
+  },
+  "keywords": [
+    "github",
+    "tools",
+    "pr"
+  ],
+  "author": "Cristian Macedo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cristianmacedo/prettygit/issues"
+  },
+  "homepage": "https://github.com/cristianmacedo/prettygit#readme"
+}

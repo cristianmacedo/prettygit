@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "PrettyGit",
+  "description": "Copy and paste git issues in a pretty format",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "images/git.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["./prettypr.js"],
+      "matches": ["https://github.com/*/*/pull/*"]
+    }
+  ]
+}
