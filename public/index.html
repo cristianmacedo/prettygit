@@ -1,5 +1,98 @@
 <html>
-  <body>
-    <h1>PrettyGit</h1>
+  <head>
+    <script src="./assets/scripts/tailwind-3.4.3.js"></script>
+    <script src="./assets/scripts/flowbite-2.3.0.min.js"></script>
+    <link href="./assets/stylesheets/flowbite-2.3.0.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 border border-gray-200 font-mono w-64 p-4 gap-1">
+    <div class="flex items-center">
+      <img src="./assets/images/git.png" class="h-4 mr-2" />
+      <h1 class="font-semibold text-base">PrettyGit</h1>
+    </div>
+    <!-- Accordion -->
+    <div
+      id="accordion-flush"
+      data-accordion="collapse"
+      data-active-classes="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
+      data-inactive-classes="text-gray-500 dark:text-gray-400"
+    >
+      <h2 id="accordion-flush-heading-1">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
+          data-accordion-target="#accordion-flush-body-1"
+          aria-expanded="true"
+          aria-controls="accordion-flush-body-1"
+        >
+          <span>Pull requests</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 rotate-180 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-1"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-1"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <label
+            for="message"
+            class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"
+            >Output template</label
+          >
+          <textarea
+            id="message"
+            rows="4"
+            class="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Write your thoughts here..."
+          ></textarea>
+          <p
+            id="helper-text-explanation"
+            class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+          >
+            Available variables: <code>$repo.url</code>,
+            <code>$repo.title</code>, <code>$issue.url</code>,
+            <code>$issue.title</code>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="px-3 py-2 text-xs font-medium justify-center inline-flex items-center text-white w-full border border-green-800 bg-green-700 rounded-md hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+    >
+      <svg
+        class="w-[16px] h-[16px] text-white dark:text-white me-1"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.414A2 2 0 0 0 20.414 6L18 3.586A2 2 0 0 0 16.586 3H5Zm10 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7V5h8v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+
+      Save
+    </button>
   </body>
 </html>

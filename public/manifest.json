@@ -5,12 +5,13 @@
   "version": "1.0",
   "action": {
     "default_popup": "index.html",
-    "default_icon": "images/git.png"
+    "default_icon": "assets/images/git.png"
   },
   "content_scripts": [
     {
       "js": ["prettypr.js"],
       "matches": ["https://github.com/*/*/pull/*"]
     }
-  ]
+  ],
+  "permissions": ["storage"]
 }

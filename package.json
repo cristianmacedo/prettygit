@@ -4,7 +4,8 @@
   "description": "Copy and paste git issues in a pretty format",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.js"
+    "build": "webpack --config webpack/webpack.config.js",
+    "build:watch": "webpack --config webpack/webpack.config.js --watch"
   },
   "repository": {
     "type": "git",
