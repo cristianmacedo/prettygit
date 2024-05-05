@@ -1,5 +1,9 @@
 debugger;
 
+const options = {
+  pullRequestTemplate: "",
+};
+
 const copySvg = `
 <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy">
     <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
@@ -14,6 +18,12 @@ const buttonHtml = `
       <span class="Button-label">Copy Pretty PR</span>
     </span>
   </button>`;
+
+chrome.storage.sync.get("options", async (data) => {
+  if (data.options) {
+    options.pullRequestTemplate = data.options.pullRequestTemplate;
+  }
+});
 
 const logTag = "[PrettyGit][PrettifyPR]";
 
@@ -56,16 +66,51 @@ function prettifyPr(e: ClipboardEvent) {
     return;
   }
 
-  const issueTitle = headerTitle.innerText.trim();
+  const issue = {
+    title: "",
+    number: "",
+    type: "",
+    url: "",
+  };
 
-  const [_, orgName, repoName, issueType, issueNumber] =
+  const repo = {
+    title: "",
+    url: "",
+  };
+
+  const org = {
+    title: "",
+    url: "",
+  };
+
+  const [_, orgTitle, repoTitle, issueType, issueNumber] =
     window.location.pathname.split("/");
 
-  const repoNameWithoutFury = repoName.replace("fury_", "");
-  const issueUrl = `${window.location.origin}/${orgName}/${repoName}/${issueType}/${issueNumber}`;
-  const repoUrl = `${window.location.origin}/${orgName}/${repoName}`;
+  issue.title = headerTitle.innerText.trim();
+  issue.number = issueNumber;
+  issue.type = issueType;
+  issue.url = `${window.location.origin}/${orgTitle}/${repoTitle}/${issueType}/${issueNumber}`;
 
-  const markdownString = `<blockquote>Project: <a href="${repoUrl}">${repoNameWithoutFury}</a><br />:github-pull-request-opened: <a href="${issueUrl}">${issueTitle}</a></blockquote>`;
+  repo.title = repoTitle.replace("fury_", "");
+  repo.url = `${window.location.origin}/${orgTitle}/${repoTitle}`;
+
+  org.title = orgTitle;
+  org.url = `${window.location.origin}/${orgTitle}`;
+
+  if (!options.pullRequestTemplate) {
+    console.error(`${logTag} Pull request template is not set.`);
+    return;
+  }
+
+  const markdownString = options.pullRequestTemplate
+    .replace(/\${issue.title}/g, issue.title)
+    .replace(/\${issue.number}/g, issue.number)
+    .replace(/\${issue.type}/g, issue.type)
+    .replace(/\${issue.url}/g, issue.url)
+    .replace(/\${repo.title}/g, repo.title)
+    .replace(/\${repo.url}/g, repo.url)
+    .replace(/\${org.title}/g, org.title)
+    .replace(/\${org.url}/g, org.url);
 
   e.clipboardData?.setData("text/html", markdownString);
   e.clipboardData?.setData("text/plain", markdownString);
