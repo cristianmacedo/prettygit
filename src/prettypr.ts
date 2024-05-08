@@ -2,6 +2,7 @@ debugger;
 
 const options = {
   pullRequestTemplate: "",
+  repoTitleRemove: "",
 };
 
 const copySvg = `
@@ -22,6 +23,7 @@ const buttonHtml = `
 chrome.storage.sync.get("options", async (data) => {
   if (data.options) {
     options.pullRequestTemplate = data.options.pullRequestTemplate;
+    options.repoTitleRemove = data.options.repoTitleRemove;
   }
 });
 
@@ -91,7 +93,7 @@ function prettifyPr(e: ClipboardEvent) {
   issue.type = issueType;
   issue.url = `${window.location.origin}/${orgTitle}/${repoTitle}/${issueType}/${issueNumber}`;
 
-  repo.title = repoTitle.replace("fury_", "");
+  repo.title = repoTitle.replace(options.repoTitleRemove, "").trim();
   repo.url = `${window.location.origin}/${orgTitle}/${repoTitle}`;
 
   org.title = orgTitle;

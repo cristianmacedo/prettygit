@@ -1,4 +1,4 @@
-<html>
+<html class="h-[512px]">
   <head>
     <script src="./assets/scripts/tailwind-3.4.3.js"></script>
     <script src="./assets/scripts/flowbite-2.3.0.min.js"></script>
@@ -7,7 +7,7 @@
     <script src="./assets/scripts/options.js"></script>
   </head>
   <body
-    class="bg-gray-100 dark:bg-ol-dark font-mono w-64 p-4 flex flex-col h-auto overflow-auto justify-between"
+    class="bg-gray-100 dark:bg-ol-dark font-mono w-64 p-4 flex flex-col h-full overflow-auto justify-between"
   >
     <div class="flex flex-col gap-1">
       <div class="flex items-center">
@@ -62,7 +62,6 @@
           aria-labelledby="accordion-flush-heading-1"
         >
           <div class="py-5">
-            <!-- Form doesnt actually submits, since it is a chrome extension -->
             <form
               id="form"
               class="flex flex-col gap-2"
@@ -71,29 +70,40 @@
             >
               <label
                 for="pullRequestTemplate"
-                class="block mb-2 text-xs font-medium text-fg-light dark:text-fg-dark"
+                class="block text-xs font-medium text-fg-light dark:text-fg-dark"
                 >Output template</label
               >
               <textarea
                 id="pullRequestTemplate"
                 rows="4"
-                class="block p-2.5 h-32 w-full text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block m1-2 p-2.5 h-32 w-full text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Write your thoughts here..."
               ></textarea>
+              <p
+                id="helper-text-explanation"
+                class="mb-1 text-[8px] text-gray-500 dark:text-gray-400"
+              >
+                Available variables:
+
+                <code>issue.title</code>, <code>issue.number</code>,
+                <code>issue.type</code>, <code>issue.url</code>,
+                <code>repo.title</code>, <code>repo.url</code>,
+                <code>org.title</code>,
+                <code>org.url</code>
+              </p>
+
+              <label
+                for="repoTitleRemove"
+                class="block text-xs font-medium text-fg-light dark:text-fg-dark"
+                >Remove from repository title</label
+              >
+              <input
+                id="repoTitleRemove"
+                type="text"
+                class="block p-2.5 w-full text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="some-prefix_"
+              />
             </form>
-
-            <p
-              id="helper-text-explanation"
-              class="mt-2 text-[8px] text-gray-500 dark:text-gray-400"
-            >
-              Available variables:
-
-              <code>issue.title</code>, <code>issue.number</code>,
-              <code>issue.type</code>, <code>issue.url</code>,
-              <code>repo.title</code>, <code>repo.url</code>,
-              <code>org.title</code>,
-              <code>org.url</code>
-            </p>
           </div>
         </div>
       </div>
