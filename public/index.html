@@ -2,12 +2,13 @@
   <head>
     <script src="./assets/scripts/tailwind-3.4.3.js"></script>
     <script src="./assets/scripts/flowbite-2.3.0.min.js"></script>
-    <link href="./assets/stylesheets/flowbite-2.3.0.min.css" rel="stylesheet" />
     <script src="./assets/scripts/tailwind.config.js"></script>
     <script src="./assets/scripts/options.js"></script>
+
+    <link href="./assets/stylesheets/flowbite-2.3.0.min.css" rel="stylesheet" />
   </head>
   <body
-    class="bg-gray-100 dark:bg-ol-dark font-mono w-64 p-4 flex flex-col h-full overflow-auto justify-between"
+    class="bg-gray-100 dark:bg-ol-dark w-64 p-4 font-mono flex flex-col h-full overflow-auto justify-between"
   >
     <div class="flex flex-col gap-1">
       <div class="flex items-center">
@@ -32,7 +33,7 @@
         <h2 id="accordion-flush-heading-1">
           <button
             type="button"
-            class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-ol-border-dark dark:text-gray-400 gap-3"
+            class="flex items-center justify-between w-full py-5 font-medium text-sm rtl:text-right text-gray-500 border-b border-gray-200 dark:border-ol-border-dark dark:text-gray-400 gap-3"
             data-accordion-target="#accordion-flush-body-1"
             aria-expanded="true"
             aria-controls="accordion-flush-body-1"
@@ -76,8 +77,8 @@
               <textarea
                 id="pullRequestTemplate"
                 rows="4"
-                class="block m1-2 p-2.5 h-32 w-full text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Write your thoughts here..."
+                class="block m1-2 p-2.5 h-32 w-full font-mono text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Write your template here..."
               ></textarea>
               <p
                 id="helper-text-explanation"
@@ -113,7 +114,7 @@
       <button
         type="button"
         id="reset"
-        class="text-btn-danger-fg bg-btn-danger-bg hover:bg-btn-danger-bg-hover focus:ring-4 focus:outline-none focus:ring-gray-600 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:text-btn-danger-fg dark:hover:text-btn-danger-fg-hover dark:btn-danger-bg dark:hover:bg-btn-danger-bg-hover dark:focus:ring-gray-600"
+        class="text-btn-danger-fg bg-btn-danger-bg hover:bg-btn-danger-bg-hover font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:text-btn-danger-fg dark:hover:text-btn-danger-fg-hover dark:btn-danger-bg dark:hover:bg-btn-danger-bg-hover"
       >
         <svg
           class="w-5 h-5"
@@ -137,7 +138,7 @@
       <button
         type="button"
         id="save"
-        class="px-3 py-2 text-xs font-medium justify-center inline-flex items-center text-white w-full border border-green-800 bg-green-700 rounded-md hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        class="px-3 py-2 text-xs font-medium justify-center inline-flex items-center text-white w-full border border-green-800 bg-green-700 rounded-md hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700"
       >
         <svg
           class="w-[16px] h-[16px] fill-white me-1"

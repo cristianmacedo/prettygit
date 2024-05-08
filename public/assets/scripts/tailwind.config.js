@@ -1,5 +1,9 @@
 tailwind.config = {
   theme: {
+    fontFamily: {
+      system: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji'`,
+    },
+
     extend: {
       colors: {
         "ol-dark": "#2d333b",
