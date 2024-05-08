@@ -25,7 +25,7 @@ chrome.storage.sync.get("options", async (data) => {
   }
 });
 
-const logTag = "[PrettyGit][PrettifyPR]";
+const logTag = "[PrettyGit]";
 
 function showToast(type: "warning" | "error" | "success", content: string) {
   const toast = document.querySelector(`.Toast--${type}`);
