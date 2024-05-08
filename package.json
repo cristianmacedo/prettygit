@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.js",
-    "build:watch": "webpack --config webpack/webpack.config.js --watch"
+    "build:watch": "webpack --config webpack/webpack.config.js --watch",
+    "compress": "cd dist && zip -r prettygit-$(node -p -e \"require('../package.json').version\").zip ./* -x \"*.DS_Store\" && mv prettygit-$(node -p -e \"require('../package.json').version\").zip ../extension",
+    "bump-manifest": "node ./ci/bump-manifest.js",
+    "version": " npm run bump-manifest && npm run build && npm run compress && git add ."
   },
   "repository": {
     "type": "git",
