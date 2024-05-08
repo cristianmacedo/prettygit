@@ -1,6 +1,6 @@
 {
   "name": "prettygit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Copy and paste git issues in a pretty format",
   "main": "index.js",
   "scripts": {
