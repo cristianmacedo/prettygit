@@ -25,10 +25,11 @@ window.onload = async () => {
     chrome.storage.sync.set({ options });
   });
 
-  const data = await chrome.storage.sync.get("options");
-  Object.assign(options, data.options);
-  optionsForm.pullRequestTemplate.value =
-    options.pullRequestTemplate || defaultOptions.pullRequestTemplate;
-  optionsForm.repoTitleRemove.value =
-    options.repoTitleRemove || defaultOptions.repoTitleRemove;
+  const data = await chrome.storage.sync.get(defaultOptions);
+
+  Object.assign(options, data);
+  optionsForm.pullRequestTemplate.value = options.pullRequestTemplate;
+  optionsForm.repoTitleRemove.value = options.repoTitleRemove;
+
+  return chrome.storage.sync.set({ options });
 };

@@ -1,8 +1,8 @@
 debugger;
 
 const options = {
-  pullRequestTemplate: "",
-  repoTitleRemove: "",
+  pullRequestTemplate: `<blockquote>Project: <a href="\${repo.url}">\${repo.title}</a><br />:github-pull-request-opened: <a href="\${issue.url}">\${issue.title}</a></blockquote>`,
+  repoTitleRemove: "fury_",
 };
 
 const copySvg = `
