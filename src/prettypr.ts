@@ -136,8 +136,6 @@ function createButton() {
 }
 
 function addEventListeners() {
-  document.addEventListener("copy", prettifyPr);
-
   const prettifyPrButton = document.getElementById("prettifyPr");
 
   if (!prettifyPrButton) {
@@ -146,7 +144,9 @@ function addEventListeners() {
   }
 
   prettifyPrButton.addEventListener("click", () => {
+    document.addEventListener("copy", prettifyPr);
     document.execCommand("copy");
+    document.removeEventListener("copy", prettifyPr);
   });
 }
 
