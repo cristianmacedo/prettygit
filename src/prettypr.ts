@@ -85,5 +85,19 @@ function addEventListeners() {
   });
 }
 
-createButton();
-addEventListeners();
+const setup = () => {
+  createButton();
+  addEventListeners();
+};
+
+setup();
+
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    console.log("URL changed!", url);
+    setup();
+  }
+}).observe(document, { subtree: true, childList: true });
