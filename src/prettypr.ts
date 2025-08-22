@@ -20,12 +20,20 @@ const buttonHtml = `
     </span>
   </button>`;
 
-chrome.storage.sync.get("options", async (data) => {
-  if (data.options) {
-    options.pullRequestTemplate = data.options.pullRequestTemplate;
-    options.repoTitleRemove = data.options.repoTitleRemove;
+chrome.storage.sync.get(
+  {
+    options: {
+      pullRequestTemplate: options.pullRequestTemplate,
+      repoTitleRemove: options.repoTitleRemove,
+    },
+  },
+  async (data) => {
+    if (data.options) {
+      options.pullRequestTemplate = data.options.pullRequestTemplate;
+      options.repoTitleRemove = data.options.repoTitleRemove;
+    }
   }
-});
+);
 
 const logTag = "[PrettyGit]";
 
