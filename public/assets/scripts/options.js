@@ -12,7 +12,7 @@ window.onload = async () => {
   optionsSave.addEventListener("click", async () => {
     options.pullRequestTemplate = optionsForm.pullRequestTemplate.value;
     options.repoTitleRemove = optionsForm.repoTitleRemove.value;
-    chrome.storage.sync.set({ options });
+    await chrome.storage.sync.set({ options });
   });
 
   optionsReset.addEventListener("click", async () => {
@@ -25,11 +25,11 @@ window.onload = async () => {
     chrome.storage.sync.set({ options });
   });
 
-  const data = await chrome.storage.sync.get(defaultOptions);
+  const { options: savedOptions } = await chrome.storage.sync.get({
+    options: defaultOptions,
+  });
 
-  Object.assign(options, data);
+  Object.assign(options, savedOptions);
   optionsForm.pullRequestTemplate.value = options.pullRequestTemplate;
   optionsForm.repoTitleRemove.value = options.repoTitleRemove;
-
-  return chrome.storage.sync.set({ options });
 };
