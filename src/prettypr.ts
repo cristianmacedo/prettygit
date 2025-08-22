@@ -32,10 +32,11 @@ chrome.storage.sync.get(
 
 function prettifyPr(e: ClipboardEvent) {
   const headerTitle: HTMLTitleElement | null =
-    document.querySelector(".gh-header-title");
+    document.querySelector(".gh-header-title") ||
+    document.querySelector("[class*=PageHeader-Title]");
 
   if (!headerTitle) {
-    console.error(`${LOG_TAG} Could not find .gh-header-title.`);
+    console.error(`${LOG_TAG} Could not find PR title.`);
     return;
   }
 
@@ -54,10 +55,12 @@ function prettifyPr(e: ClipboardEvent) {
 }
 
 function createButton() {
-  const headerActions = document.querySelector(".gh-header-actions");
+  const headerActions =
+    document.querySelector(".gh-header-actions") ||
+    document.querySelector("[class*=PageHeader-Actions]");
 
   if (!headerActions) {
-    console.error(`${LOG_TAG} Could not find .gh-header-actions.`);
+    console.error(`${LOG_TAG} Could not find header actions.`);
     return;
   }
 
