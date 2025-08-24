@@ -3,7 +3,7 @@ toastStyles.textContent = `
   #prettygit-toast {
     position: fixed;
     bottom: 1rem;
-    right: 1rem;
+    left: 1rem;
     display: flex;
     align-items: center;
     padding: 1rem;
@@ -76,28 +76,23 @@ export function showToast(
   type: "warning" | "error" | "success",
   content: string
 ) {
-  // Remove existing toast if any
   const existingToast = document.getElementById("prettygit-toast");
   if (existingToast) {
     existingToast.remove();
   }
 
-  // Create toast container
   const toast = document.createElement("div");
   toast.id = "prettygit-toast";
   toast.className = type;
 
-  // Create icon based on type
   const icon = document.createElement("div");
   icon.className = "icon";
   icon.innerHTML = icons[type];
 
-  // Create message
   const message = document.createElement("div");
   message.className = "message";
   message.textContent = content;
 
-  // Create close button
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.className = "close-button";
@@ -105,15 +100,12 @@ export function showToast(
     '<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>';
   closeButton.onclick = () => toast.remove();
 
-  // Assemble toast
   toast.appendChild(icon);
   toast.appendChild(message);
   toast.appendChild(closeButton);
 
-  // Add to document
   document.body.appendChild(toast);
 
-  // Auto-remove after 3 seconds
   setTimeout(() => {
     toast.classList.add("fade-out");
     setTimeout(() => toast.remove(), 200);

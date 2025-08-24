@@ -1,20 +1,155 @@
-import { LOG_TAG, DEFAULT_OPTIONS, COPY_SVG } from "./constants";
+import {
+  LOG_TAG,
+  DEFAULT_OPTIONS,
+  COPY_SVG,
+  EXPAND_COLLAPSE_SVG,
+} from "./constants";
 import { showToast } from "./utils/toast";
 import { formatPR } from "./utils/pr-formatter";
 
 const options = { ...DEFAULT_OPTIONS };
 
-const buttonHtml = `
-  <button id="prettifyPr" type="button" class="flex-md-order-2 Button--secondary Button--small Button m-0 mr-md-0">
-    <span class="Button-content">
-      <span class="Button-visual Button-leadingVisual">
+const toolbarStyles = document.createElement("style");
+toolbarStyles.textContent = `
+  #prettygit-toolbar {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    #prettygit-toolbar {
+      background: rgba(22, 27, 34, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #f0f6fc;
+    }
+  }
+  
+  #prettygit-toolbar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  #prettygit-toolbar .toolbar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #24292f;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    width: 36px;
+    height: 36px;
+    position: relative;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    #prettygit-toolbar .toolbar-button {
+      color: #f0f6fc;
+    }
+  }
+  
+  #prettygit-toolbar .toolbar-button:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    #prettygit-toolbar .toolbar-button:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+  
+  #prettygit-toolbar .toolbar-button:active {
+    transform: scale(0.98);
+  }
+  
+  #prettygit-toolbar .button-icon {
+    width: 16px;
+    height: auto;
+    opacity: 0.7;
+  }
+  
+  #prettygit-toolbar .toolbar-button:hover .button-icon {
+    opacity: 1;
+  }
+  
+  /* Tooltip styles */
+  #prettygit-toolbar .toolbar-button[title] {
+    position: relative;
+  }
+  
+  #prettygit-toolbar .toolbar-button[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10000;
+    margin-bottom: 6px;
+    pointer-events: none;
+  }
+  
+  #prettygit-toolbar .toolbar-button[title]:hover::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    margin-bottom: 2px;
+    pointer-events: none;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    #prettygit-toolbar .toolbar-button[title]:hover::after {
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+    }
+    
+    #prettygit-toolbar .toolbar-button[title]:hover::before {
+      border-top-color: rgba(255, 255, 255, 0.9);
+    }
+  }
+`;
+document.head.appendChild(toolbarStyles);
+
+const toolbarHtml = `
+  <div id="prettygit-toolbar">
+    <button id="prettifyPr" type="button" class="toolbar-button" title="Copy Pretty PR" aria-label="Copy Pretty PR">
+      <span class="button-icon">
         ${COPY_SVG}
       </span>
-      <span class="Button-label">Copy Pretty PR</span>
-    </span>
-  </button>`;
+    </button>
+    <button id="collapseExpandFiles" type="button" class="toolbar-button" title="Collapse/Expand Files" aria-label="Collapse/Expand Files">
+      <span class="button-icon">
+        ${EXPAND_COLLAPSE_SVG}
+      </span>
+    </button>
+  </div>`;
 
-// Load saved options
 chrome.storage.sync.get(
   {
     options: {
@@ -54,20 +189,16 @@ function prettifyPr(e: ClipboardEvent) {
   showToast("success", "Copied Pretty PR to clipboard!");
 }
 
-function createButton() {
-  const headerActions =
-    document.querySelector(".gh-header-actions") ||
-    document.querySelector("[class*=PageHeader-Actions]");
-
-  if (!headerActions) {
-    console.error(`${LOG_TAG} Could not find header actions.`);
-    return;
+function createFloatingToolbar() {
+  const existingToolbar = document.getElementById("prettygit-toolbar");
+  if (existingToolbar) {
+    existingToolbar.remove();
   }
 
-  const buttonContainer = document.createElement("div");
-  buttonContainer.innerHTML = buttonHtml;
+  const toolbarContainer = document.createElement("div");
+  toolbarContainer.innerHTML = toolbarHtml;
 
-  headerActions.appendChild(buttonContainer);
+  document.body.appendChild(toolbarContainer);
 }
 
 function addEventListeners() {
@@ -83,10 +214,40 @@ function addEventListeners() {
     document.execCommand("copy");
     document.removeEventListener("copy", prettifyPr);
   });
+
+  const collapseExpandFilesButton = document.getElementById(
+    "collapseExpandFiles"
+  );
+
+  if (!collapseExpandFilesButton) {
+    console.error(`${LOG_TAG} Could not find #collapseExpandFiles button.`);
+    return;
+  }
+
+  collapseExpandFilesButton.addEventListener("click", () => {
+    let buttons: NodeListOf<Element> | null = null;
+
+    const selectors = [
+      "[class*=Diff-module__diffHeader] > div > button",
+      ".btn-octicon.js-details-target",
+    ];
+
+    for (const selector of selectors) {
+      const found = document.querySelectorAll(selector);
+      if (found.length > 0) {
+        buttons = found;
+        break;
+      }
+    }
+
+    buttons?.forEach((button: Element) => {
+      (button as HTMLButtonElement).click();
+    });
+  });
 }
 
 const setup = () => {
-  createButton();
+  createFloatingToolbar();
   addEventListeners();
 };
 
