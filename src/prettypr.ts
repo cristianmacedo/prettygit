@@ -148,6 +148,23 @@ toolbarStyles.textContent = `
       border-top-color: rgba(255, 255, 255, 0.9);
     }
   }
+  
+  /* Branding positioned below toolbar */
+  #prettygit-branding {
+    position: absolute;
+    bottom: -13px;
+    right: 20px;
+    font-size: 7px;
+    color: rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.3px;
+    opacity: 0.6;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    #prettygit-branding {
+      color: rgba(255, 255, 255, 0.25);
+    }
+  }
 `;
 document.head.appendChild(toolbarStyles);
 
@@ -163,6 +180,7 @@ const toolbarHtml = `
         ${EXPAND_COLLAPSE_SVG}
       </span>
     </button>
+    <a id="prettygit-branding" href="https://github.com/cristianmacedo/prettygit" target="_blank">by prettygit</a>
   </div>`;
 
 chrome.storage.sync.get(
