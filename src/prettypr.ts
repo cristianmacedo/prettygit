@@ -194,10 +194,9 @@ function updateToolbarState() {
   collapseExpandButton.disabled = !onFilesPage;
 
   if (onFilesPage) {
-    collapseExpandButton.title = "Collapse/Expand Files";
+    collapseExpandButton.title = "Toggle all files";
   } else {
-    collapseExpandButton.title =
-      "Collapse/Expand Files (only available on Files tab)";
+    collapseExpandButton.title = "Toggle all files (Files tab)";
   }
 }
 
@@ -263,6 +262,7 @@ function addEventListeners() {
   }
 
   collapseExpandFilesButton.addEventListener("click", () => {
+    // Find all file toggle buttons
     let buttons: NodeListOf<Element> | null = null;
 
     const selectors = [
@@ -278,9 +278,27 @@ function addEventListeners() {
       }
     }
 
-    buttons?.forEach((button: Element) => {
-      (button as HTMLButtonElement).click();
+    if (!buttons || buttons.length === 0) return;
+
+    const expandedFiles = Array.from(buttons).filter((button) => {
+      return button.querySelector(".octicon-chevron-down");
     });
+
+    const shouldCollapse = expandedFiles.length > 0;
+
+    buttons.forEach((button: Element) => {
+      const hasChevronDown = button.querySelector(".octicon-chevron-down");
+      const isExpanded = !!hasChevronDown;
+
+      if (shouldCollapse && isExpanded) {
+        (button as HTMLButtonElement).click();
+      } else if (!shouldCollapse && !isExpanded) {
+        (button as HTMLButtonElement).click();
+      }
+    });
+
+    const action = shouldCollapse ? "collapsed" : "expanded";
+    showToast("success", `All files ${action}!`);
   });
 }
 
