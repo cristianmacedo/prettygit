@@ -78,6 +78,21 @@ toolbarStyles.textContent = `
     transform: scale(0.98);
   }
   
+  #prettygit-toolbar .toolbar-button:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+  
+  #prettygit-toolbar .toolbar-button:disabled:hover {
+    background: transparent;
+    transform: none;
+  }
+  
+  #prettygit-toolbar .toolbar-button:disabled .button-icon {
+    opacity: 0.3;
+  }
+  
   #prettygit-toolbar .button-icon {
     width: 16px;
     height: auto;
@@ -165,6 +180,27 @@ chrome.storage.sync.get(
   }
 );
 
+function isOnFilesPage(): boolean {
+  return window.location.pathname.includes("/files");
+}
+
+function updateToolbarState() {
+  const collapseExpandButton = document.getElementById(
+    "collapseExpandFiles"
+  ) as HTMLButtonElement;
+  if (!collapseExpandButton) return;
+
+  const onFilesPage = isOnFilesPage();
+  collapseExpandButton.disabled = !onFilesPage;
+
+  if (onFilesPage) {
+    collapseExpandButton.title = "Collapse/Expand Files";
+  } else {
+    collapseExpandButton.title =
+      "Collapse/Expand Files (only available on Files tab)";
+  }
+}
+
 function prettifyPr(e: ClipboardEvent) {
   const headerTitle: HTMLTitleElement | null =
     document.querySelector(".gh-header-title") ||
@@ -199,6 +235,8 @@ function createFloatingToolbar() {
   toolbarContainer.innerHTML = toolbarHtml;
 
   document.body.appendChild(toolbarContainer);
+
+  updateToolbarState();
 }
 
 function addEventListeners() {
@@ -249,6 +287,7 @@ function addEventListeners() {
 const setup = () => {
   createFloatingToolbar();
   addEventListeners();
+  updateToolbarState();
 };
 
 setup();
