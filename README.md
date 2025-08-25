@@ -1,6 +1,13 @@
 # prettygit
 
-A tool to make it easier to show markup information for Github elements
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/hiacbakfjladopdjbdlbbncidjnngjlb.svg)](https://chromewebstore.google.com/detail/prettygit/hiacbakfjladopdjbdlbbncidjnngjlb)
+![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/hiacbakfjladopdjbdlbbncidjnngjlb)
+![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/hiacbakfjladopdjbdlbbncidjnngjlb)
+![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/last-updated/hiacbakfjladopdjbdlbbncidjnngjlb)
+
+Transform GitHub pull requests and issues into professional, formatted snippets for easy sharing in Slack, Teams, or documentation. While providing tools for better experience on GitHub.
+
+![Screenshot](./extension/screenshot-2.png)
 
 ## Generating a New Version
 
