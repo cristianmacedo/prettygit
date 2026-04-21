@@ -1,9 +1,5 @@
 export const LOG_TAG = "[PrettyGit]";
-
-export const DEFAULT_OPTIONS = {
-  pullRequestTemplate: `<blockquote>Project: <a href="\${repo.url}">\${repo.title}</a><br />:github-pull-request-opened: <a href="\${issue.url}">\${issue.title}</a></blockquote>`,
-  repoTitleRemove: "fury_",
-};
+export { DEFAULT_OPTIONS } from "./shared/options";
 
 export const COPY_SVG = `
 <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy">

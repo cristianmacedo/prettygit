@@ -4,8 +4,10 @@ import {
   COPY_SVG,
   EXPAND_COLLAPSE_SVG,
 } from "./constants";
+import { STORAGE_KEY } from "./shared/options";
 import { showToast } from "./utils/toast";
-import { formatPR } from "./utils/pr-formatter";
+import { createTemplateContext, renderTemplate } from "./utils/pr-formatter";
+import { htmlToPlainText } from "./utils/plain-text";
 
 const options = { ...DEFAULT_OPTIONS };
 
@@ -185,15 +187,15 @@ const toolbarHtml = `
 
 chrome.storage.sync.get(
   {
-    options: {
+    [STORAGE_KEY]: {
       pullRequestTemplate: options.pullRequestTemplate,
       repoTitleRemove: options.repoTitleRemove,
     },
   },
   async (data) => {
-    if (data.options) {
-      options.pullRequestTemplate = data.options.pullRequestTemplate;
-      options.repoTitleRemove = data.options.repoTitleRemove;
+    if (data[STORAGE_KEY]) {
+      options.pullRequestTemplate = data[STORAGE_KEY].pullRequestTemplate;
+      options.repoTitleRemove = data[STORAGE_KEY].repoTitleRemove;
     }
   }
 );
@@ -202,10 +204,24 @@ function isOnFilesPage(): boolean {
   return window.location.pathname.includes("/files");
 }
 
+function getIssueKind(): "PR" | "Issue" {
+  return window.location.pathname.includes("/issues/") ? "Issue" : "PR";
+}
+
 function updateToolbarState() {
+  const prettifyButton = document.getElementById(
+    "prettifyPr"
+  ) as HTMLButtonElement | null;
   const collapseExpandButton = document.getElementById(
     "collapseExpandFiles"
   ) as HTMLButtonElement;
+  const issueKind = getIssueKind();
+
+  if (prettifyButton) {
+    prettifyButton.title = `Copy Pretty ${issueKind}`;
+    prettifyButton.setAttribute("aria-label", `Copy Pretty ${issueKind}`);
+  }
+
   if (!collapseExpandButton) return;
 
   const onFilesPage = isOnFilesPage();
@@ -218,28 +234,77 @@ function updateToolbarState() {
   }
 }
 
-function prettifyPr(e: ClipboardEvent) {
-  const headerTitle: HTMLTitleElement | null =
-    document.querySelector(".gh-header-title") ||
-    document.querySelector("[class*=PageHeader-Title]");
+function getTitleElement(): HTMLElement | null {
+  const selectors = [
+    ".gh-header-title .js-issue-title",
+    ".gh-header-title",
+    "[data-component='PH_Title']",
+    "[class*='PageHeader-Title']",
+    "bdi.js-issue-title",
+  ];
+
+  for (const selector of selectors) {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (element?.innerText.trim()) {
+      return element;
+    }
+  }
+
+  return null;
+}
+
+function buildFormattedContent() {
+  const headerTitle = getTitleElement();
 
   if (!headerTitle) {
-    console.error(`${LOG_TAG} Could not find PR title.`);
-    return;
+    throw new Error("Could not find PR title.");
   }
 
   if (!options.pullRequestTemplate) {
-    console.error(`${LOG_TAG} Pull request template is not set.`);
+    throw new Error("Pull request template is not set.");
+  }
+
+  const context = createTemplateContext(
+    window.location,
+    headerTitle.innerText,
+    options
+  );
+
+  if (!context) {
+    throw new Error("Unsupported page URL.");
+  }
+
+  const html = renderTemplate(options.pullRequestTemplate, context, "html");
+  const text = htmlToPlainText(html);
+
+  return { html, text };
+}
+
+function fallbackCopyToClipboard(html: string, text: string) {
+  const handleCopy = (event: ClipboardEvent) => {
+    event.clipboardData?.setData("text/html", html);
+    event.clipboardData?.setData("text/plain", text);
+    event.preventDefault();
+  };
+
+  document.addEventListener("copy", handleCopy, { once: true });
+  document.execCommand("copy");
+}
+
+async function copyFormattedContent() {
+  const { html, text } = buildFormattedContent();
+
+  if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
+    const clipboardItem = new ClipboardItem({
+      "text/html": new Blob([html], { type: "text/html" }),
+      "text/plain": new Blob([text], { type: "text/plain" }),
+    });
+
+    await navigator.clipboard.write([clipboardItem]);
     return;
   }
 
-  const markdownString = formatPR(headerTitle, options);
-
-  e.clipboardData?.setData("text/html", markdownString);
-  e.clipboardData?.setData("text/plain", markdownString);
-  e.preventDefault();
-
-  showToast("success", "Copied Pretty PR to clipboard!");
+  fallbackCopyToClipboard(html, text);
 }
 
 function createFloatingToolbar() {
@@ -265,9 +330,16 @@ function addEventListeners() {
   }
 
   prettifyPrButton.addEventListener("click", () => {
-    document.addEventListener("copy", prettifyPr);
-    document.execCommand("copy");
-    document.removeEventListener("copy", prettifyPr);
+    void copyFormattedContent()
+      .then(() => {
+        showToast("success", `Copied Pretty ${getIssueKind()} to clipboard!`);
+      })
+      .catch((error: unknown) => {
+        const message =
+          error instanceof Error ? error.message : "Copy failed unexpectedly.";
+        console.error(`${LOG_TAG} ${message}`, error);
+        showToast("error", message);
+      });
   });
 
   const collapseExpandFilesButton = document.getElementById(
@@ -280,37 +352,43 @@ function addEventListeners() {
   }
 
   collapseExpandFilesButton.addEventListener("click", () => {
-    // Find all file toggle buttons
-    let buttons: NodeListOf<Element> | null = null;
-
     const selectors = [
-      "[class*=Diff-module__diffHeader] > div > button",
+      "button[aria-label='Toggle diff contents'][aria-expanded]",
+      "[class*=Diff-module__diffHeader] button[aria-expanded]",
+      ".file button[aria-expanded]",
       ".btn-octicon.js-details-target",
     ];
 
+    let buttons: Element[] = [];
+
     for (const selector of selectors) {
-      const found = document.querySelectorAll(selector);
+      const found = Array.from(document.querySelectorAll(selector));
       if (found.length > 0) {
         buttons = found;
         break;
       }
     }
 
-    if (!buttons || buttons.length === 0) return;
+    if (buttons.length === 0) {
+      showToast("warning", "No file toggles found on this page.");
+      return;
+    }
 
-    const expandedFiles = Array.from(buttons).filter((button) => {
-      return button.querySelector(".octicon-chevron-down");
-    });
+    const isExpanded = (button: Element) => {
+      const ariaExpanded = button.getAttribute("aria-expanded");
+      if (ariaExpanded === "true") return true;
+      if (ariaExpanded === "false") return false;
+      return !!button.querySelector(".octicon-chevron-down");
+    };
 
-    const shouldCollapse = expandedFiles.length > 0;
+    const shouldCollapse = buttons.some((button) => isExpanded(button));
 
     buttons.forEach((button: Element) => {
-      const hasChevronDown = button.querySelector(".octicon-chevron-down");
-      const isExpanded = !!hasChevronDown;
+      const expanded = isExpanded(button);
 
-      if (shouldCollapse && isExpanded) {
+      if (shouldCollapse && expanded) {
         (button as HTMLButtonElement).click();
-      } else if (!shouldCollapse && !isExpanded) {
+      } else if (!shouldCollapse && !expanded) {
         (button as HTMLButtonElement).click();
       }
     });
@@ -329,11 +407,23 @@ const setup = () => {
 setup();
 
 let lastUrl = location.href;
-new MutationObserver(() => {
+const handleNavigation = () => {
   const url = location.href;
   if (url !== lastUrl) {
     lastUrl = url;
-    console.log("URL changed!", url);
     setup();
   }
-}).observe(document, { subtree: true, childList: true });
+};
+
+document.addEventListener("pjax:end", handleNavigation);
+document.addEventListener("turbo:render", handleNavigation);
+window.addEventListener("popstate", handleNavigation);
+
+const observer = new MutationObserver(() => {
+  handleNavigation();
+  if (!document.getElementById("prettygit-toolbar")) {
+    setup();
+  }
+});
+
+observer.observe(document.documentElement, { subtree: true, childList: true });

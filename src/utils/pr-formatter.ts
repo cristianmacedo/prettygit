@@ -1,67 +1,99 @@
-interface Issue {
+import type { ExtensionOptions } from "../shared/options";
+
+export interface Issue {
   title: string;
   number: string;
   type: string;
   url: string;
 }
 
-interface Repo {
+export interface Repo {
   title: string;
   url: string;
 }
 
-interface Org {
+export interface Org {
   title: string;
   url: string;
 }
 
-interface Options {
-  pullRequestTemplate: string;
-  repoTitleRemove: string;
+export interface TemplateContext {
+  issue: Issue;
+  repo: Repo;
+  org: Org;
 }
 
-export function formatPR(
-  headerTitle: HTMLTitleElement,
-  options: Options
+type PlaceholderValueMap = {
+  issue: Issue;
+  repo: Repo;
+  org: Org;
+};
+
+interface LocationLike {
+  origin: string;
+  pathname: string;
+}
+
+const PLACEHOLDER_PATTERN = /\${(issue|repo|org)\.(title|number|type|url)}/g;
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export function createTemplateContext(
+  location: LocationLike,
+  title: string,
+  options: ExtensionOptions
+): TemplateContext | null {
+  const match = location.pathname.match(
+    /^\/([^/]+)\/([^/]+)\/(pull|issues)\/([^/]+)(?:\/.*)?$/
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  const [, orgTitle, repoTitle, issueType, issueNumber] = match;
+
+  return {
+    issue: {
+      title: title.trim(),
+      number: issueNumber,
+      type: issueType,
+      url: `${location.origin}/${orgTitle}/${repoTitle}/${issueType}/${issueNumber}`,
+    },
+    repo: {
+      title: repoTitle.replace(options.repoTitleRemove, "").trim(),
+      url: `${location.origin}/${orgTitle}/${repoTitle}`,
+    },
+    org: {
+      title: orgTitle,
+      url: `${location.origin}/${orgTitle}`,
+    },
+  };
+}
+
+export function renderTemplate(
+  template: string,
+  context: TemplateContext,
+  mode: "html" | "text" = "html"
 ): string {
-  const issue: Issue = {
-    title: "",
-    number: "",
-    type: "",
-    url: "",
-  };
+  return template.replace(
+    PLACEHOLDER_PATTERN,
+    (_match, scope: keyof PlaceholderValueMap, key: string) => {
+      const scopedValues = context[scope] as unknown as Record<string, string>;
+      const value = scopedValues[key];
 
-  const repo: Repo = {
-    title: "",
-    url: "",
-  };
+      if (typeof value !== "string") {
+        return "";
+      }
 
-  const org: Org = {
-    title: "",
-    url: "",
-  };
-
-  const [_, orgTitle, repoTitle, issueType, issueNumber] =
-    window.location.pathname.split("/");
-
-  issue.title = headerTitle.innerText.trim();
-  issue.number = issueNumber;
-  issue.type = issueType;
-  issue.url = `${window.location.origin}/${orgTitle}/${repoTitle}/${issueType}/${issueNumber}`;
-
-  repo.title = repoTitle.replace(options.repoTitleRemove, "").trim();
-  repo.url = `${window.location.origin}/${orgTitle}/${repoTitle}`;
-
-  org.title = orgTitle;
-  org.url = `${window.location.origin}/${orgTitle}`;
-
-  return options.pullRequestTemplate
-    .replace(/\${issue.title}/g, issue.title)
-    .replace(/\${issue.number}/g, issue.number)
-    .replace(/\${issue.type}/g, issue.type)
-    .replace(/\${issue.url}/g, issue.url)
-    .replace(/\${repo.title}/g, repo.title)
-    .replace(/\${repo.url}/g, repo.url)
-    .replace(/\${org.title}/g, org.title)
-    .replace(/\${org.url}/g, org.url);
+      return mode === "html" ? escapeHtml(value) : value;
+    }
+  );
 }

@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack/webpack.config.js",
     "build:watch": "webpack --config webpack/webpack.config.js --watch",
+    "test": "vitest run",
     "compress": "cd dist && zip -r prettygit-$(node -p -e \"require('../package.json').version\").zip ./* -x \"*.DS_Store\" && mv prettygit-$(node -p -e \"require('../package.json').version\").zip ../extension",
     "bump-manifest": "node ./ci/bump-manifest.js",
     "version": " npm run bump-manifest && npm run build && npm run compress && git add ."
@@ -30,6 +31,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
+    "vitest": "^3.2.4",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   }
