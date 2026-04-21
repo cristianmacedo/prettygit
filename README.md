@@ -9,7 +9,15 @@ Transform GitHub pull requests and issues into professional, formatted snippets 
 
 ![Screenshot](./extension/screenshot-2.png)
 
-## Generating a New Version
+## Development
+
+```bash
+npm install
+npm test
+npm run build
+```
+
+## Releasing
 
 To generate a new version of the plugin, follow these steps:
 
@@ -26,8 +34,8 @@ This will automatically:
 - Update the version in `package.json`
 - Update the version in `manifest.json`
 - Build the project
-- Generate a new zip file in the `extension/` directory
-- Stage all changes in git
+- Generate a local zip file in the `extension/` directory
+- Stage the versioned source files in git
 
 After running the version command, you can:
 
