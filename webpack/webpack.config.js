@@ -4,6 +4,7 @@ module.exports = {
   mode: "production",
   entry: {
     prettypr: path.resolve(__dirname, "..", "src", "prettypr.ts"),
+    options: path.resolve(__dirname, "..", "src", "options.ts"),
   },
   output: {
     path: path.join(__dirname, "../dist"),

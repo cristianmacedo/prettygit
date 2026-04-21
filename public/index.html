@@ -1,163 +1,75 @@
-<html class="h-[512px] w-[400px]">
+<!doctype html>
+<html lang="en">
   <head>
-    <script src="./assets/scripts/tailwind-3.4.3.js"></script>
-    <script src="./assets/scripts/flowbite-2.3.0.min.js"></script>
-    <script src="./assets/scripts/tailwind.config.js"></script>
-    <script src="./assets/scripts/options.js"></script>
-
-    <link href="./assets/stylesheets/flowbite-2.3.0.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrettyGit</title>
+    <link href="./popup.css" rel="stylesheet" />
+    <script src="./options.js" defer></script>
   </head>
-  <body
-    class="bg-gray-100 dark:bg-ol-dark w-full p-4 font-mono flex flex-col h-full overflow-auto justify-between"
-  >
-    <div class="flex flex-col gap-1">
-      <div class="flex items-center">
-        <a href="https://github.com/cristianmacedo/prettygit" target="_blank">
-          <img
-            src="./assets/images/prettygit-128.png"
-            alt="PrettyGit"
-            class="w-8 h-8 me-2"
-          />
-        </a>
-        <h1 class="font-semibold text-base text-fg-light dark:text-fg-dark">
-          PrettyGit
-        </h1>
-      </div>
-      <!-- Accordion -->
-      <div
-        id="accordion-flush"
-        data-accordion="collapse"
-        data-active-classes="bg-gray-100 dark:bg-ol-dark text-fg-light dark:text-fg-dark"
-        data-inactive-classes="text-gray-500 dark:text-fg-dark"
-      >
-        <h2 id="accordion-flush-heading-1">
-          <button
-            type="button"
-            class="flex items-center justify-between w-full py-3 font-medium text-sm rtl:text-right text-gray-500 border-b border-gray-200 dark:border-ol-border-dark dark:text-gray-400 gap-3"
-            data-accordion-target="#accordion-flush-body-1"
-            aria-expanded="true"
-            aria-controls="accordion-flush-body-1"
-          >
-            <span>Copy Pretty PR</span>
-            <svg
-              data-accordion-icon
-              class="w-3 h-3 rotate-180 shrink-0"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5 5 1 1 5"
-              />
-            </svg>
-          </button>
-        </h2>
-        <div
-          id="accordion-flush-body-1"
-          class="hidden"
-          aria-labelledby="accordion-flush-heading-1"
+  <body>
+    <main class="popup-shell">
+      <header class="popup-header">
+        <a
+          class="brand"
+          href="https://github.com/cristianmacedo/prettygit"
+          target="_blank"
+          rel="noreferrer"
         >
-          <div class="py-5">
-            <form
-              id="form"
-              class="flex flex-col gap-2"
-              action="#"
-              method="POST"
-            >
-              <label
-                for="pullRequestTemplate"
-                class="block text-xs font-medium text-fg-light dark:text-fg-dark"
-                >Output template</label
-              >
-              <textarea
-                id="pullRequestTemplate"
-                rows="4"
-                class="block m1-2 p-2.5 h-32 w-full font-mono text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Write your template here..."
-              ></textarea>
-              <p
-                id="helper-text-explanation"
-                class="mb-1 text-[8px] text-gray-500 dark:text-gray-400"
-              >
-                Available variables:
-
-                <code>issue.title</code>, <code>issue.number</code>,
-                <code>issue.type</code>, <code>issue.url</code>,
-                <code>repo.title</code>, <code>repo.url</code>,
-                <code>org.title</code>,
-                <code>org.url</code>
-              </p>
-
-              <label
-                for="repoTitleRemove"
-                class="block text-xs font-medium text-fg-light dark:text-fg-dark"
-                >Remove from repository title</label
-              >
-              <input
-                id="repoTitleRemove"
-                type="text"
-                class="block p-2.5 w-full text-xs text-fg-light bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-[#22272e] dark:border-ol-border-dark dark:placeholder-gray-400 dark:text-fg-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="some-prefix_"
-              />
-            </form>
+          <img src="./assets/images/prettygit-128.png" alt="PrettyGit" />
+          <div>
+            <h1>PrettyGit</h1>
+            <p>Format GitHub pull requests and issues for sharing.</p>
           </div>
-        </div>
-      </div>
-    </div>
+        </a>
+      </header>
 
-    <div class="flex">
-      <button
-        type="button"
-        id="reset"
-        class="text-btn-danger-fg bg-btn-danger-bg hover:bg-btn-danger-bg-hover font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:text-btn-danger-fg dark:hover:text-btn-danger-fg-hover dark:btn-danger-bg dark:hover:bg-btn-danger-bg-hover"
-      >
-        <svg
-          class="w-5 h-5"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 9h13a5 5 0 0 1 0 10H7M3 9l4-4M3 9l4 4"
-          />
-        </svg>
-        <span class="sr-only">Reset</span>
-      </button>
-      <button
-        type="button"
-        id="save"
-        class="px-3 py-2 text-xs font-medium justify-center inline-flex items-center text-white w-full border border-green-800 bg-green-700 rounded-md hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700"
-      >
-        <svg
-          class="w-[16px] h-[16px] fill-white me-1"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.414A2 2 0 0 0 20.414 6L18 3.586A2 2 0 0 0 16.586 3H5Zm10 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7V5h8v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1Z"
-            clip-rule="evenodd"
-          />
-        </svg>
+      <form id="options-form" class="card">
+        <section class="field-group">
+          <div class="field-copy">
+            <h2>Output Template</h2>
+            <p>
+              Use HTML for rich paste targets. Dynamic values are safely escaped
+              before they are injected.
+            </p>
+          </div>
+          <label class="field" for="pullRequestTemplate">
+            <span>Template</span>
+            <textarea
+              id="pullRequestTemplate"
+              rows="7"
+              placeholder="Write your template here..."
+            ></textarea>
+          </label>
+          <div class="tokens" aria-label="Available variables">
+            <code>issue.title</code>
+            <code>issue.number</code>
+            <code>issue.type</code>
+            <code>issue.url</code>
+            <code>repo.title</code>
+            <code>repo.url</code>
+            <code>org.title</code>
+            <code>org.url</code>
+          </div>
+        </section>
 
-        Save
-      </button>
-    </div>
+        <section class="field-group">
+          <label class="field" for="repoTitleRemove">
+            <span>Repository Prefix To Remove</span>
+            <input
+              id="repoTitleRemove"
+              type="text"
+              placeholder="some-prefix_"
+            />
+          </label>
+        </section>
+
+        <footer class="actions">
+          <button type="button" id="reset" class="secondary">Reset</button>
+          <span id="status" class="status" aria-live="polite"></span>
+          <button type="submit" class="primary">Save</button>
+        </footer>
+      </form>
+    </main>
   </body>
 </html>

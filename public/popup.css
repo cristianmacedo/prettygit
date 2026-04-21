@@ -1,0 +1,205 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4efe7;
+  --panel: rgba(255, 252, 247, 0.96);
+  --panel-border: rgba(110, 77, 53, 0.14);
+  --text: #22170f;
+  --muted: #6d5a4a;
+  --accent: #14532d;
+  --accent-hover: #0f3f22;
+  --secondary-bg: #efe5d7;
+  --secondary-hover: #e3d4bf;
+  --code-bg: rgba(82, 56, 35, 0.08);
+  --shadow: 0 18px 45px rgba(62, 35, 17, 0.12);
+  font-family:
+    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171311;
+    --panel: rgba(31, 24, 20, 0.96);
+    --panel-border: rgba(246, 226, 204, 0.12);
+    --text: #f7efe6;
+    --muted: #c4b29f;
+    --accent: #4ade80;
+    --accent-hover: #36c36b;
+    --secondary-bg: #2d241f;
+    --secondary-hover: #3a2e27;
+    --code-bg: rgba(255, 247, 239, 0.08);
+    --shadow: 0 20px 48px rgba(0, 0, 0, 0.34);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 400px;
+  min-height: 520px;
+  background:
+    radial-gradient(circle at top left, rgba(241, 194, 125, 0.24), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.12), transparent 28%),
+    var(--bg);
+  color: var(--text);
+}
+
+body {
+  padding: 18px;
+}
+
+.popup-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.popup-header {
+  display: flex;
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.brand p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-copy h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.field-copy p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.field span {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.field textarea,
+.field input {
+  width: 100%;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.45);
+  color: inherit;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 148px;
+  resize: vertical;
+}
+
+.field textarea:focus,
+.field input:focus {
+  outline: 2px solid rgba(36, 153, 88, 0.3);
+  outline-offset: 2px;
+}
+
+.tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tokens code {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--code-bg);
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.actions .primary {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+}
+
+.actions .primary:hover {
+  background: var(--accent-hover);
+}
+
+.actions .secondary {
+  background: var(--secondary-bg);
+  color: inherit;
+}
+
+.actions .secondary:hover {
+  background: var(--secondary-hover);
+}
+
+.status {
+  min-width: 44px;
+  font-size: 12px;
+  color: var(--muted);
+}

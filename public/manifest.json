@@ -18,7 +18,8 @@
         "prettypr.js"
       ],
       "matches": [
-        "https://github.com/*/*/pull/*"
+        "https://github.com/*/*/pull/*",
+        "https://github.com/*/*/issues/*"
       ]
     }
   ],
